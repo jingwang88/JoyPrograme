@@ -4,15 +4,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 public class TankClient extends Frame{
 	
-	private static final int GAME_WIDTH = 800;
-	private static final int GAME_HEIGHT = 600;
-	Tank myTank = new Tank(50, 50);
+	public static final int GAME_WIDTH = 800;
+	public static final int GAME_HEIGHT = 600;
+	Tank myTank = new Tank(50, 50, this);
+	Bullet bullet;
 	Image offScreenImage = null;
 
 	public void paint(Graphics g) {
+		if(bullet != null)
+			bullet.draw(g);
 		myTank.draw(g);
 	}
 
@@ -28,13 +30,13 @@ public class TankClient extends Frame{
 		paint(gOffScreen);
 		g.drawImage(offScreenImage, 0, 0, null);
 	}
-	public void frameLaunch () {
+	public void frameLaunch() {
 		this.setBounds(400, 300, GAME_WIDTH, GAME_HEIGHT);
 		this.setTitle("TankWar");
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
-			}
+			}	
 		});
 		this.addKeyListener(new KeyMonitor());
 		this.setResizable(false);

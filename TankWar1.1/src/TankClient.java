@@ -4,15 +4,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 public class TankClient extends Frame{
 	
-	private static final int GAME_WIDTH = 800;
-	private static final int GAME_HEIGHT = 600;
-	Tank myTank = new Tank(50, 50);
+	public static final int GAME_WIDTH = 800;
+	public static final int GAME_HEIGHT = 600;
+	Tank myTank = new Tank(50, 50, this);
+	Bullet bullet;
 	Image offScreenImage = null;
 
 	public void paint(Graphics g) {
+		if(bullet != null)
+			bullet.draw(g);
 		myTank.draw(g);
 	}
 
