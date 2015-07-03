@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Random;
 
 
@@ -14,6 +15,7 @@ public class Tank {
 	enum Direction{l, lu, u, ru, r, rd, d, ld, stop};
 	Direction direction = Direction.stop;
 	private int x, y;
+	private int xOld, yOld;
 	private boolean Live = true;
 	TankClient tc;
 	Direction paoTongDir = Direction.d;
@@ -82,6 +84,8 @@ public class Tank {
 		move();
 	}
 	public void move() {
+		this.xOld = x;
+		this.yOld = y;
 		switch (direction) {
 		case l:
 			x -= xSpeed;
@@ -139,11 +143,15 @@ public class Tank {
 		//bl = false; bu = false; br = false; bd = false;
 		//direction = Direction.stop;
 	}
+	
+	public void stay() {
+		this.x = xOld;
+		this.y = yOld;
+	}
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		switch (key) {
 		case KeyEvent.VK_CONTROL:
-			fire();
 			break;
 		case KeyEvent.VK_RIGHT: 
 			br = true;
@@ -178,7 +186,7 @@ public class Tank {
 			bu = false;
 			break;
 		case KeyEvent.VK_CONTROL:
-	
+			fire();
 			break;
 		default:
 			break;
@@ -211,7 +219,7 @@ public class Tank {
 	public Boolean getGood() {
 		return good;
 	}
-
+	
 	
 	public void tankDirection() {
 		if(bl && !bu && !br && !bd) direction = Direction.l;
@@ -223,5 +231,34 @@ public class Tank {
 		else if(!bl && !bu && !br && bd) direction = Direction.d;
 		else if(bl && !bu && !br && bd) direction = Direction.ld;
 		else if(!bl && !bu && !br && !bd) direction = Direction.stop;
+	}
+	
+	public boolean collidesWithWall(Wall wall) {
+		if(this.Live && this.getRectangle().intersects(wall.getRectangle())) {
+			stay();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hitTank(Tank tank) {
+		if(this.Live && tank.Live && this.getRectangle().intersects(tank.getRectangle())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hitTanks(List<Tank> tanks) {
+		for(int i=0; i<tanks.size(); i++) {
+			Tank tank = tanks.get(i);
+			if(!this.equals(tank)) {
+				if(hitTank(tank)){
+					this.stay();
+					tank.stay();
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
