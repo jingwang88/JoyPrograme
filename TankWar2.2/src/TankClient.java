@@ -24,7 +24,7 @@ public class TankClient extends Frame{
 		g.drawString("bullet numbers"+bullets.size(), 60, 40);
 		g.drawString("expode numbers"+expodes.size(), 60, 60);
 		g.drawString("Tank numbers"+tanks.size(), 60, 80);
-		
+		g.drawString("tank life"+myTank.getLife(), 60, 100);
 		for(int i=0; i<bullets.size(); i++) {
 			Bullet bullet = bullets.get(i);
 			bullet.hitTanks(tanks);

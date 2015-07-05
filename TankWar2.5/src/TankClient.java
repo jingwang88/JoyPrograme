@@ -14,17 +14,18 @@ public class TankClient extends Frame{
 	public static final int GAME_HEIGHT = 600;
 	Tank myTank = new Tank(50, 50, true, Tank.Direction.stop, this);
 	List<Tank> tanks = new ArrayList<Tank>();
-	 List<Expode> expodes = new ArrayList<Expode>();
+	List<Expode> expodes = new ArrayList<Expode>();
 	List<Bullet> bullets = new ArrayList<Bullet>();
 	Image offScreenImage = null;
 	Wall wall1 = new Wall(300, 150, 25, 200, this);
 	Wall wall2 = new Wall(320, 120, 200, 25, this);
+	Blood blood = new Blood();
 
 	public void paint(Graphics g) {
 		g.drawString("bullet numbers"+bullets.size(), 60, 40);
 		g.drawString("expode numbers"+expodes.size(), 60, 60);
 		g.drawString("Tank numbers"+tanks.size(), 60, 80);
-		
+		g.drawString("tank life"+myTank.getLife(), 60, 100);
 		for(int i=0; i<bullets.size(); i++) {
 			Bullet bullet = bullets.get(i);
 			bullet.hitTanks(tanks);
@@ -45,11 +46,16 @@ public class TankClient extends Frame{
 		}
 		myTank.collidesWithWall(wall1);
 		myTank.collidesWithWall(wall2);
-		myTank.hitTanks(tanks);
+		myTank.eatBlood(blood);
 		myTank.draw(g);
 		wall1.draw(g);
 		wall2.draw(g);
-		
+		blood.draw(g);
+		if(tanks.size() <= 0) {
+			for(int i=0; i<5; i++) {
+				tanks.add(new Tank(50+60*(i+1), 50, false, Tank.Direction.d, this));
+			}
+		}
 	}
 
 	public void update(Graphics g) {
@@ -68,6 +74,7 @@ public class TankClient extends Frame{
 		for(int i=0; i<10; i++) {
 			tanks.add(new Tank(50+60*(i+1), 50, false, Tank.Direction.d, this));
 		}
+	
 		
 		this.setBounds(300, 200, GAME_WIDTH, GAME_HEIGHT);
 		this.setTitle("TankWar");
